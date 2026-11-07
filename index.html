@@ -225,34 +225,6 @@
 
     .tool li { margin-bottom: 0.35rem; }
 
-    /* Proof placeholder */
-    .placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 14rem;
-      padding: 1.5rem;
-      border: 2px dashed var(--accent);
-      border-radius: 12px;
-      background: var(--accent-soft);
-      text-align: center;
-    }
-
-    .placeholder strong {
-      display: block;
-      margin-bottom: 0.4rem;
-      font-size: 0.85rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-
-    .placeholder p {
-      margin: 0;
-      color: var(--muted);
-    }
-
     figure { margin: 0; }
 
     figcaption {
@@ -401,17 +373,8 @@
       <h2>Proof</h2>
       <p>A screenshot of a pull request I merged.</p>
       <figure>
-        <!--
-          PLACEHOLDER. In the next pull request, replace the <div class="placeholder"> block
-          below with this line, after saving the screenshot to images/pr-screenshot.png:
-
-          <img src="images/pr-screenshot.png" alt="Screenshot of a merged pull request on GitHub" style="width:100%; height:auto; border:1px solid #e3e5e8; border-radius:12px;">
-        -->
-        <div class="placeholder">
-          <strong>Placeholder</strong>
-          <p>Screenshot of a merged pull request goes here. It will be added in the next pull request.</p>
-        </div>
-        <figcaption>Screenshot coming in a second pull request.</figcaption>
+        <img src="images/merged-pr.png" alt="Screenshot of a merged pull request on GitHub" style="width:100%; height:auto; border:1px solid #e3e5e8; border-radius:12px;">
+        <figcaption>Pull request #1, which added this page, merged into main on GitHub.</figcaption>
       </figure>
     </section>
 
