@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Setting up Claude Code</title>
+  <meta name="description" content="What Ronben Baute learned setting up Claude Code at Opt Digital.">
+  <style>
+    :root {
+      --bg: #fafaf8;
+      --surface: #ffffff;
+      --text: #1f2328;
+      --muted: #5b6470;
+      --line: #e3e5e8;
+      --accent: #c2410c;
+      --accent-soft: #fff1e8;
+      --tag: #eef1f4;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 1.0625rem;
+      line-height: 1.6;
+    }
+
+    .wrap {
+      max-width: 42rem;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* Header */
+    header {
+      padding: 3rem 0 2rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    header .kicker {
+      margin: 0 0 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    header h1 {
+      margin: 0 0 0.5rem;
+      font-size: 2rem;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+
+    header p.lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+
+    /* In-page navigation */
+    nav {
+      margin-top: 1.5rem;
+    }
+
+    nav ol {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    nav a {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    nav a:hover,
+    nav a:focus-visible {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Sections */
+    section {
+      padding: 2.5rem 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    section:last-of-type { border-bottom: 0; }
+
+    .num {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    h2 {
+      margin: 0 0 1rem;
+      font-size: 1.5rem;
+      line-height: 1.25;
+    }
+
+    h3 {
+      margin: 1.5rem 0 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    p { margin: 0 0 1rem; }
+
+    a { color: var(--accent); }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.92em;
+      background: var(--tag);
+      padding: 0.1em 0.35em;
+      border-radius: 4px;
+    }
+
+    /* Cards used in sections 2 and 3 */
+    .cards {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+    }
+
+    .card strong {
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .card p:last-child { margin-bottom: 0; }
+
+    .note {
+      margin-top: 0.75rem;
+      padding: 0.6rem 0.8rem;
+      border-left: 3px solid var(--accent);
+      background: var(--accent-soft);
+      border-radius: 0 6px 6px 0;
+      font-size: 0.95rem;
+    }
+
+    .note p { margin: 0; }
+
+    /* Workflow steps */
+    .steps {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      counter-reset: step;
+    }
+
+    .steps li {
+      position: relative;
+      padding: 0.6rem 0 0.6rem 2.6rem;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .steps li:last-child { border-bottom: 0; }
+
+    .steps li::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0.7rem;
+      width: 1.8rem;
+      height: 1.8rem;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tag {
+      display: inline-block;
+      margin-left: 0.4rem;
+      padding: 0.05rem 0.5rem;
+      border-radius: 999px;
+      background: var(--tag);
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    /* Tool section */
+    .tool ul {
+      margin: 0 0 1rem;
+      padding-left: 1.25rem;
+    }
+
+    .tool li { margin-bottom: 0.35rem; }
+
+    /* Proof placeholder */
+    .placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 14rem;
+      padding: 1.5rem;
+      border: 2px dashed var(--accent);
+      border-radius: 12px;
+      background: var(--accent-soft);
+      text-align: center;
+    }
+
+    .placeholder strong {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .placeholder p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    figure { margin: 0; }
+
+    figcaption {
+      margin-top: 0.6rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    footer {
+      padding: 2rem 0 3rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* Laptop and wider */
+    @media (min-width: 48rem) {
+      body { font-size: 1.125rem; }
+      header { padding: 4.5rem 0 2.5rem; }
+      header h1 { font-size: 2.6rem; }
+      section { padding: 3.25rem 0; }
+      h2 { font-size: 1.75rem; }
+      .cards.two-col { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <p class="kicker">Opt Digital · Claude Code</p>
+      <h1>What I learned setting up Claude Code</h1>
+      <p class="lead">A short record of my first week with Claude Code: what I installed, what clicked, how we ship work, and the tool I want to build next.</p>
+      <nav aria-label="Sections">
+        <ol>
+          <li><a href="#who">1. Who I am</a></li>
+          <li><a href="#setup">2. What I set up</a></li>
+          <li><a href="#learned">3. Three things I learned</a></li>
+          <li><a href="#workflow">4. How we work</a></li>
+          <li><a href="#tool">5. A tool I want</a></li>
+          <li><a href="#proof">6. Proof</a></li>
+        </ol>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <section id="who">
+      <span class="num">Section 1</span>
+      <h2>Who I am</h2>
+      <p>I'm <strong>Ronben Baute</strong>, SEO Specialist at Opt Digital.</p>
+      <p>This page is my first project built with Claude Code. It is written in plain HTML and CSS, lives in a public GitHub repo, and is published on Vercel.</p>
+    </section>
+
+    <section id="setup">
+      <span class="num">Section 2</span>
+      <h2>What I set up</h2>
+      <ul class="cards two-col">
+        <li class="card">
+          <strong>VS Code</strong>
+          <p>The editor where the files are written. Claude Code runs inside it as an extension.</p>
+        </li>
+        <li class="card">
+          <strong>Claude Code</strong>
+          <p>The AI assistant that reads the repo, edits files and runs commands with me.</p>
+        </li>
+        <li class="card">
+          <strong>Git</strong>
+          <p>Tracks every change as a snapshot, so work can be reviewed and undone.</p>
+        </li>
+        <li class="card">
+          <strong>GitHub</strong>
+          <p>Hosts the repo online and is where pull requests are reviewed.</p>
+        </li>
+        <li class="card">
+          <strong>Vercel</strong>
+          <p>Publishes the <code>main</code> branch as a live web page.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section id="learned">
+      <span class="num">Section 3</span>
+      <h2>Three things I learned</h2>
+      <ol class="cards">
+        <li class="card">
+          <strong>Keep secrets out of the repo</strong>
+          <p>All API keys and private information should be saved in <code>.env</code> files. Nothing important should go out public. I ask for a security review to make sure API keys are not exposed.</p>
+          <div class="note">
+            <p>One extra detail: the <code>.env</code> file only stays private if it is listed in <code>.gitignore</code>, so Git never commits it.</p>
+          </div>
+        </li>
+        <li class="card">
+          <strong>Plan mode matters</strong>
+          <p>Describing the goal clearly, and the features I want, in the instructions. Claude should ask me questions first before executing the instructions, to make sure everything goes according to the output I want.</p>
+        </li>
+        <li class="card">
+          <strong>How MCP relates to APIs and Python scripts</strong>
+          <p>MCP is a standard for connecting AI applications to tools. MCP servers can use APIs or Python scripts behind the scenes to perform or execute the instructions, but a Python script can also call an API directly without MCP.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section id="workflow">
+      <span class="num">Section 4</span>
+      <h2>How we work</h2>
+      <p>The steps from a new branch to a live page, as I understand them. The grey tag is the Git word for each step.</p>
+      <ol class="steps">
+        <li>I'll make my own copy of the code to work on, so the real version stays untouched. <span class="tag">branch</span></li>
+        <li>I'll work with Claude to build or make the changes. <span class="tag">edit</span></li>
+        <li>I'll run, test, optimise and prove that the changes work. <span class="tag">check</span></li>
+        <li>I'll save a snapshot with a short note detailing what was changed. <span class="tag">commit</span></li>
+        <li>Push the snapshots to GitHub. <span class="tag">push</span></li>
+        <li>I'll pull up a request and ask for the changes to be added to the real version. <span class="tag">pull request</span></li>
+        <li>Will reviews the changes and may ask for fixes. <span class="tag">review</span></li>
+        <li>Once approved, Will merges the changes into the main version. <span class="tag">merge</span></li>
+        <li>The updated version is then deployed so users can access it. <span class="tag">deploy</span></li>
+      </ol>
+    </section>
+
+    <section id="tool" class="tool">
+      <span class="num">Section 5</span>
+      <h2>A tool I want</h2>
+
+      <h3>The job</h3>
+      <p>I'd like Claude to help run a weekly SEO audit and performance review across the campaigns I manage, using data from Google Search Console, Semrush, Google Analytics and Screaming Frog.</p>
+
+      <h3>What it would look for</h3>
+      <ul>
+        <li>Keywords that lost rankings, and pages with significant traffic or keyword losses.</li>
+        <li>Content that needs refreshing.</li>
+        <li>Technical issues such as indexing problems, duplicate content and site speed.</li>
+        <li>Campaign wins, including ranking gains, traffic growth and strong-performing pages.</li>
+      </ul>
+      <p>Each report should explain the campaign's current status, whether improving, stable, declining or mixed, even when no major issues are found, and identify evidence-backed factors that may explain its performance.</p>
+
+      <h3>How it could work</h3>
+      <p>The tool would compare results with previous periods, distinguish confirmed findings from possible causes, and investigate whether changes coincide with Google updates without assuming causation.</p>
+      <p>The output would be a concise weekly report covering overall campaign health, wins, issues, affected pages and keywords, supporting evidence and recommended next steps. Recommendations should follow the 80/20 rule, prioritising actions likely to deliver the greatest benefit for the least effort, including opportunities to build on what is already working.</p>
+
+      <h3>What it would save me</h3>
+      <p>Time gathering data and reviewing each campaign manually, giving me more time to implement improvements, make strategic decisions and communicate results.</p>
+    </section>
+
+    <section id="proof">
+      <span class="num">Section 6</span>
+      <h2>Proof</h2>
+      <p>A screenshot of a pull request I merged.</p>
+      <figure>
+        <!--
+          PLACEHOLDER. In the next pull request, replace the <div class="placeholder"> block
+          below with this line, after saving the screenshot to images/pr-screenshot.png:
+
+          <img src="images/pr-screenshot.png" alt="Screenshot of a merged pull request on GitHub" style="width:100%; height:auto; border:1px solid #e3e5e8; border-radius:12px;">
+        -->
+        <div class="placeholder">
+          <strong>Placeholder</strong>
+          <p>Screenshot of a merged pull request goes here. It will be added in the next pull request.</p>
+        </div>
+        <figcaption>Screenshot coming in a second pull request.</figcaption>
+      </figure>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>Built with plain HTML and CSS, Claude Code, Git, GitHub and Vercel. No frameworks, no build step.</p>
+    </div>
+  </footer>
+</body>
+</html>
